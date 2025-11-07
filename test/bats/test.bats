@@ -458,7 +458,7 @@ __required_labels_audit_test() {
 
   local pod_ip="$(kubectl -n ${GATEKEEPER_NAMESPACE} get pod -l control-plane=audit-controller -ojson | jq --raw-output '[.items[].status.podIP][0]' | sed 's#\.#-#g')"
   
-  wait_for_process ${WAIT_TIME} ${SLEEP_TIME} "kubectl exec -it temp-metrics -- curl -s http://${pod_ip}.${GATEKEEPER_NAMESPACE}.pod:8888/metrics | grep 'gatekeeper_violations_per_constraint'"
+  wait_for_process ${WAIT_TIME} ${SLEEP_TIME} "kubectl exec temp-metrics -- curl -s http://${pod_ip}.${GATEKEEPER_NAMESPACE}.pod:8888/metrics | grep 'gatekeeper_violations_per_constraint'"
   
   local metrics_output=$(kubectl exec -it temp-metrics -- curl -s http://${pod_ip}.${GATEKEEPER_NAMESPACE}.pod:8888/metrics)
   echo "${metrics_output}" | grep 'gatekeeper_violations_per_constraint{constraint='
